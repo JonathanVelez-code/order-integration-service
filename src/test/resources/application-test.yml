@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:orders-test;DB_CLOSE_DELAY=-1
+
+integration:
+  scheduling:
+    enabled: false
+  crm:
+    max-attempts: 3
+    backoff-ms: 1           # keep retries fast in tests
+  demo:
+    seed: false
+    crm-failure-rate: 0.0

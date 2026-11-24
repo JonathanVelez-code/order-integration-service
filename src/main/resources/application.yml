@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: order-integration-service
+  datasource:
+    url: jdbc:h2:mem:orders;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  batch:
+    job:
+      enabled: false          # jobs run on the schedule or through the API, not at startup
+    jdbc:
+      initialize-schema: always
+
+integration:
+  scheduling:
+    enabled: true
+  sync:
+    cron: "0 */15 * * * *"    # pull ERP changes every 15 minutes
+  reconciliation:
+    cron: "0 0 2 * * *"       # nightly reconciliation at 2:00 AM
+    zone: America/New_York
+  crm:
+    max-attempts: 3           # 1 call + 2 retries
+    backoff-ms: 200           # 200 ms, then 400 ms (exponential)
+  demo:
+    seed: true                # load 200 sample orders into the simulated ERP and CRM
+    crm-failure-rate: 0.05    # 5% of simulated CRM calls fail, to exercise the retries
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.jonathanvelez.orderintegration: INFO
